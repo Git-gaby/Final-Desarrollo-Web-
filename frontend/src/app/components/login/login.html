@@ -1,0 +1,61 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <h1>Reseñas de Restaurantes</h1>
+    <p class="subtitle">Gestiona tus experiencias gastronómicas de forma privada</p>
+
+    <div class="tabs">
+      <button type="button" [class.active]="!modoRegistro" (click)="cambiarModo(false)">
+        Iniciar Sesión
+      </button>
+      <button type="button" [class.active]="modoRegistro" (click)="cambiarModo(true)">
+        Registrarse
+      </button>
+    </div>
+
+    @if (mensajeError) {
+      <div class="alert alert-error">{{ mensajeError }}</div>
+    }
+    @if (mensajeExito) {
+      <div class="alert alert-success">{{ mensajeExito }}</div>
+    }
+
+    @if (!modoRegistro) {
+      <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+        <div class="form-group">
+          <label for="login-email">Correo electrónico</label>
+          <input id="login-email" type="email" formControlName="email" placeholder="usuario@correo.com" />
+        </div>
+
+        <div class="form-group">
+          <label for="login-pass">Contraseña</label>
+          <input id="login-pass" type="password" formControlName="password" placeholder="••••••••" />
+        </div>
+
+        <button type="submit" class="btn-primary" [disabled]="loginForm.invalid || cargando">
+          {{ cargando ? 'Ingresando...' : 'Ingresar' }}
+        </button>
+      </form>
+    } @else {
+      <form [formGroup]="registroForm" (ngSubmit)="onRegister()">
+        <div class="form-group">
+          <label for="reg-nombre">Nombre completo</label>
+          <input id="reg-nombre" type="text" formControlName="nombre" placeholder="Ej. Gabriel Gómez" />
+        </div>
+
+        <div class="form-group">
+          <label for="reg-email">Correo electrónico</label>
+          <input id="reg-email" type="email" formControlName="email" placeholder="usuario@correo.com" />
+        </div>
+
+        <div class="form-group">
+          <label for="reg-pass">Contraseña (mín. 4 caracteres)</label>
+          <input id="reg-pass" type="password" formControlName="password" placeholder="••••••••" />
+        </div>
+
+        <button type="submit" class="btn-primary" [disabled]="registroForm.invalid || cargando">
+          {{ cargando ? 'Registrando...' : 'Crear cuenta' }}
+        </button>
+      </form>
+    }
+  </div>
+</div>

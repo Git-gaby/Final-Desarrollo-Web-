@@ -1,0 +1,88 @@
+<header class="navbar">
+  <div class="navbar-brand">Mis Reseñas de Restaurantes</div>
+  <div class="navbar-user">
+    <span>Hola, <strong>{{ usuario?.nombre }}</strong></span>
+    <button type="button" class="btn-logout" (click)="cerrarSesion()">Cerrar Sesión</button>
+  </div>
+</header>
+
+<main class="container">
+  @if (mensaje) {
+    <div class="alert alert-success">{{ mensaje }}</div>
+  }
+  @if (error) {
+    <div class="alert alert-error">{{ error }}</div>
+  }
+
+  <div class="grid-layout">
+    <!-- Formulario Crear / Editar -->
+    <section class="card form-card">
+      <h2>{{ editandoId ? 'Editar Reseña' : 'Nueva Reseña' }}</h2>
+
+      <form [formGroup]="resenaForm" (ngSubmit)="guardarResena()">
+        <div class="form-group">
+          <label for="restaurante">Nombre del Restaurante *</label>
+          <input id="restaurante" type="text" formControlName="nombre_restaurante" placeholder="Ej. La Pampa" />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="calificacion">Calificación (1 a 5) *</label>
+            <select id="calificacion" formControlName="calificacion">
+              <option [ngValue]="5">5 - Excelente</option>
+              <option [ngValue]="4">4 - Muy bueno</option>
+              <option [ngValue]="3">3 - Aceptable</option>
+              <option [ngValue]="2">2 - Regular</option>
+              <option [ngValue]="1">1 - Malo</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="fecha">Fecha de Visita *</label>
+            <input id="fecha" type="date" formControlName="fecha_visita" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="observaciones">Observaciones</label>
+          <textarea id="observaciones" rows="3" formControlName="observaciones" placeholder="¿Qué tal estuvo la comida y el servicio?"></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-primary" [disabled]="resenaForm.invalid">
+            {{ editandoId ? 'Actualizar Reseña' : 'Guardar Reseña' }}
+          </button>
+          @if (editandoId) {
+            <button type="button" class="btn-secondary" (click)="cancelarEdicion()">Cancelar</button>
+          }
+        </div>
+      </form>
+    </section>
+
+    <!-- Listado de Reseñas Propias -->
+    <section class="card list-card">
+      <h2>Tus Reseñas Registradas ({{ resenas.length }})</h2>
+
+      @if (resenas.length === 0) {
+        <p class="empty-state">Aún no has registrado ninguna reseña. ¡Crea la primera en el formulario!</p>
+      } @else {
+        <div class="resenas-list">
+          @for (item of resenas; track item.id) {
+            <article class="resena-item">
+              <div class="resena-header">
+                <h3>{{ item.nombre_restaurante }}</h3>
+                <span class="badge">{{ item.calificacion }} / 5 ★</span>
+              </div>
+              <p class="fecha">Visitado el: {{ item.fecha_visita }}</p>
+              <p class="observaciones">{{ item.observaciones || 'Sin observaciones adicionales.' }}</p>
+              <div class="item-actions">
+                <button type="button" class="btn-edit" (click)="seleccionarParaEditar(item)">Editar</button>
+                <button type="button" class="btn-delete" (click)="eliminarResena(item.id!)">Eliminar</button>
+              </div>
+            </article>
+          }
+        </div>
+      }
+    </section>
+  </div>
+</main>
