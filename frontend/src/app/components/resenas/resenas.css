@@ -1,15 +1,26 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background:
+    linear-gradient(135deg, rgba(253, 248, 240, 0.82), rgba(204, 251, 241, 0.78)),
+    url('/fondo-resenas.jpg') 
+      center / cover no-repeat fixed;
+}
+
 .navbar {
-  background: #0f172a;
+  background: linear-gradient(135deg, #0f766e, #115e59);
   color: #ffffff;
   padding: 1rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  box-shadow: 0 2px 10px rgba(15, 118, 110, 0.25);
 }
 
 .navbar-brand {
-  font-size: 1.2rem;
-  font-weight: 700;
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: 0.3px;
 }
 
 .navbar-user {
@@ -19,19 +30,24 @@
 }
 
 .btn-logout {
-  background: #ef4444;
+  background: #ff6b4a;
   color: #ffffff;
   border: none;
-  padding: 0.45rem 0.9rem;
-  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 700;
+  transition: filter 0.2s ease;
+}
+
+.btn-logout:hover {
+  filter: brightness(1.08);
 }
 
 .container {
   max-width: 1100px;
-  margin: 2rem auto;
-  padding: 0 1rem;
+  margin: 0 auto;
+  padding: 2rem 1rem;
 }
 
 .grid-layout {
@@ -48,17 +64,18 @@
 }
 
 .card {
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.96);
   padding: 1.5rem;
-  border-radius: 10px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(19, 78, 74, 0.14);
+  border-top: 4px solid #0d9488;
 }
 
 h2 {
   margin-top: 0;
   font-size: 1.25rem;
-  color: #1e293b;
-  border-bottom: 1px solid #e2e8f0;
+  color: #115e59;
+  border-bottom: 2px solid #fef3c7;
   padding-bottom: 0.75rem;
 }
 
@@ -77,17 +94,23 @@ label {
   margin-bottom: 0.35rem;
   font-size: 0.875rem;
   font-weight: 600;
-  color: #334155;
+  color: #134e4a;
 }
 
 input, select, textarea {
   width: 100%;
-  padding: 0.6rem 0.75rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
+  padding: 0.65rem 0.75rem;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
   font-size: 0.95rem;
   box-sizing: border-box;
   font-family: inherit;
+  background: #ffffff;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: #0d9488;
 }
 
 .form-actions {
@@ -97,27 +120,27 @@ input, select, textarea {
 
 .btn-primary {
   flex: 1;
-  padding: 0.7rem;
-  background: #2563eb;
+  padding: 0.75rem;
+  background: linear-gradient(135deg, #ff6b4a, #f97316);
   color: #ffffff;
   border: none;
-  border-radius: 6px;
-  font-weight: 600;
+  border-radius: 8px;
+  font-weight: 700;
   cursor: pointer;
 }
 
 .btn-primary:disabled {
-  background: #94a3b8;
+  background: #cbd5e1;
   cursor: not-allowed;
 }
 
 .btn-secondary {
-  padding: 0.7rem 1rem;
-  background: #e2e8f0;
-  color: #334155;
+  padding: 0.75rem 1rem;
+  background: #fef3c7;
+  color: #92400e;
   border: none;
-  border-radius: 6px;
-  font-weight: 600;
+  border-radius: 8px;
+  font-weight: 700;
   cursor: pointer;
 }
 
@@ -128,10 +151,11 @@ input, select, textarea {
 }
 
 .resena-item {
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 1rem;
-  background: #f8fafc;
+  border: 1px solid #fde68a;
+  border-left: 5px solid #ff6b4a;
+  border-radius: 10px;
+  padding: 1rem 1.15rem;
+  background: #fffdf7;
 }
 
 .resena-header {
@@ -143,14 +167,14 @@ input, select, textarea {
 .resena-header h3 {
   margin: 0;
   font-size: 1.1rem;
-  color: #0f172a;
+  color: #115e59;
 }
 
 .badge {
   background: #fef3c7;
   color: #b45309;
-  font-weight: 700;
-  padding: 0.25rem 0.6rem;
+  font-weight: 800;
+  padding: 0.25rem 0.7rem;
   border-radius: 999px;
   font-size: 0.85rem;
 }
@@ -158,12 +182,13 @@ input, select, textarea {
 .fecha {
   margin: 0.35rem 0;
   font-size: 0.82rem;
-  color: #64748b;
+  color: #0f766e;
+  font-weight: 600;
 }
 
 .observaciones {
   margin: 0.5rem 0 0.85rem;
-  color: #334155;
+  color: #44403c;
   font-size: 0.95rem;
 }
 
@@ -173,17 +198,17 @@ input, select, textarea {
 }
 
 .btn-edit, .btn-delete {
-  padding: 0.4rem 0.8rem;
+  padding: 0.45rem 0.85rem;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
   font-size: 0.85rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
 }
 
 .btn-edit {
-  background: #dbeafe;
-  color: #1d4ed8;
+  background: #ccfbf1;
+  color: #0f766e;
 }
 
 .btn-delete {
@@ -192,21 +217,21 @@ input, select, textarea {
 }
 
 .empty-state {
-  color: #64748b;
+  color: #78716c;
   text-align: center;
   padding: 2rem 0;
 }
 
 .alert {
   padding: 0.75rem 1rem;
-  border-radius: 6px;
+  border-radius: 8px;
   margin-bottom: 1rem;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .alert-success {
-  background: #dcfce7;
-  color: #15803d;
+  background: #ccfbf1;
+  color: #115e59;
 }
 
 .alert-error {

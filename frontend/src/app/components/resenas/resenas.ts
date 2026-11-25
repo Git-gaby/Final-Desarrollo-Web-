@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ResenasService, Resena } from '../../services/resenas.service';
@@ -8,13 +8,14 @@ import { AuthService } from '../../services/auth.service';
   selector: 'app-resenas',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './resenas.html', // Cambia a './resenas.component.html' si tu CLI usa .component
-  styleUrl: './resenas.css'      // Cambia a './resenas.component.css' si tu CLI usa .component
+  templateUrl: './resenas.html', // Cambia a './resenas.component.html' si aplica
+  styleUrl: './resenas.css'      // Cambia a './resenas.component.css' si aplica
 })
 export class ResenasComponent implements OnInit {
   private fb = inject(FormBuilder);
   private resenasService = inject(ResenasService);
   private authService = inject(AuthService);
+  private cdr = inject(ChangeDetectorRef);
 
   usuario = this.authService.getUsuario();
   resenas: Resena[] = [];
@@ -37,9 +38,12 @@ export class ResenasComponent implements OnInit {
     this.resenasService.obtenerResenas().subscribe({
       next: (data) => {
         this.resenas = data;
+        this.cdr.detectChanges(); // Fuerza el repintado inmediato al recargar la página
       },
       error: (err) => {
+        console.error('Error al cargar reseñas:', err);
         this.error = err.error?.mensaje || 'Error al cargar tus reseñas.';
+        this.cdr.detectChanges();
       }
     });
   }
@@ -49,7 +53,10 @@ export class ResenasComponent implements OnInit {
     this.mensaje = '';
     this.error = '';
 
-    const datos: Resena = this.resenaForm.value;
+    const datos: Resena = {
+      ...this.resenaForm.value,
+      calificacion: Number(this.resenaForm.value.calificacion)
+    };
 
     if (this.editandoId !== null) {
       this.resenasService.actualizarResena(this.editandoId, datos).subscribe({
@@ -59,7 +66,9 @@ export class ResenasComponent implements OnInit {
           this.cargarResenas();
         },
         error: (err) => {
+          console.error('Error al actualizar:', err);
           this.error = err.error?.mensaje || 'No se pudo actualizar la reseña.';
+          this.cdr.detectChanges();
         }
       });
     } else {
@@ -70,27 +79,37 @@ export class ResenasComponent implements OnInit {
           this.cargarResenas();
         },
         error: (err) => {
+          console.error('Error al crear:', err);
           this.error = err.error?.mensaje || 'No se pudo guardar la reseña.';
+          this.cdr.detectChanges();
         }
       });
     }
   }
 
   seleccionarParaEditar(resena: Resena): void {
-    this.editandoId = resena.id!;
+    this.editandoId = resena.id ?? null;
     this.mensaje = '';
     this.error = '';
+
+    // Asegura formato YYYY-MM-DD para que el input type="date" no quede vacío
+    const fechaFormateada = resena.fecha_visita
+      ? String(resena.fecha_visita).substring(0, 10)
+      : '';
+
     this.resenaForm.patchValue({
       nombre_restaurante: resena.nombre_restaurante,
-      calificacion: resena.calificacion,
-      fecha_visita: resena.fecha_visita,
-      observaciones: resena.observaciones
+      calificacion: Number(resena.calificacion),
+      fecha_visita: fechaFormateada,
+      observaciones: resena.observaciones || ''
     });
+    this.cdr.detectChanges();
   }
 
   cancelarEdicion(): void {
     this.editandoId = null;
     this.resenaForm.reset({ calificacion: 5 });
+    this.cdr.detectChanges();
   }
 
   eliminarResena(id: number): void {
@@ -105,7 +124,9 @@ export class ResenasComponent implements OnInit {
         this.cargarResenas();
       },
       error: (err) => {
+        console.error('Error al eliminar:', err);
         this.error = err.error?.mensaje || 'No se pudo eliminar la reseña.';
+        this.cdr.detectChanges();
       }
     });
   }
